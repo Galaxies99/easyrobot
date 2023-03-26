@@ -1,3 +1,8 @@
+# User-defined files
+.DS_Store
+.history/
+*/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
