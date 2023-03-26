@@ -1,4 +1,4 @@
-<img src="assets/easyrobot.png" alt="easyrobot" style="zoom:50%;" />
+<img src="assets/easyrobot.png" alt="easyrobot" height=200 />
 
 # easyrobot
 
