@@ -2,7 +2,9 @@
 
 # easyrobot
 
-An easy and unified interface for robots (and grippers, *etc.*)
+An easy and unified interface for robots (and grippers, *etc.*).
+
+**Note**. The package is currently under active development.
 
 ## Setup
 
