@@ -2,7 +2,7 @@
 
 # easyrobot
 
-An easy and unified interface for robots (and grippers, etc.)
+An easy and unified interface for robots (and grippers, *etc.*)
 
 ## Setup
 
@@ -27,4 +27,3 @@ Finally, `import easyrobot`!
 - **Pedal**(`.pedal`). Logitech G29.
 
 - **Force/Torque Sensor**(`.ftsensor`). ATI, OptoForce.
-- 
