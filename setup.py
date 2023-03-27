@@ -10,11 +10,11 @@ setup(
     maintainer_email = "tony.fang.galaxies@gmail.com, galaxies@sjtu.edu.cn",
     package = find_packages(include = [
         'easyrobot', 
-    #   'easyrobot.robot',
+        'easyrobot.robot',
         'easyrobot.gripper', 
         'easyrobot.pedal',
         'easyrobot.utils',
-    #   'easyrobot.robot.*',
+        'easyrobot.robot.*',
         'easyrobot.gripper.*',
         'easyrobot.pedal.*',
         'easyrobot.utils.*'
