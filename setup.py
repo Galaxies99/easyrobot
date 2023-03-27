@@ -10,6 +10,7 @@ setup(
     maintainer = "Hongjie Fang",
     maintainer_email = "tony.fang.galaxies@gmail.com, galaxies@sjtu.edu.cn",
     packages = find_packages(exclude = ['docs', 'assets']),
+    include_package_data = True,
     install_requires = [
         'numpy',
         'pyserial',
