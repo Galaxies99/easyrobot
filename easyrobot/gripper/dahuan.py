@@ -1,8 +1,8 @@
-"""
+'''
 Dahuan Gripper Interface
 
 Author: Junfeng Ding, Hongjie Fang
-"""
+'''
 
 import time
 import serial
@@ -15,9 +15,9 @@ from easyrobot.gripper.base import GripperBase
 
 
 class DahuanAG95Gripper(GripperBase):
-    """
+    '''
     Dahuan AG95 Gripper API.
-    """
+    '''
     def __init__(
         self, 
         port: str,

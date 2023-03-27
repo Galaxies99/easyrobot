@@ -10,9 +10,9 @@ from easyrobot.pedal.logitech import LogitechG29Pedal
 
 
 def get_pedal(**params):
-    """
+    '''
     Get the pedal object from the pedal library.
-    """
+    '''
     name = params.get('name', 'none')
     try:
         if re.fullmatch('[ -_]*logitech[ -_]*g29[ -_]*', str.lower(name)):
