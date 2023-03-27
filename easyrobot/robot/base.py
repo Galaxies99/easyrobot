@@ -118,6 +118,12 @@ class RobotBase(object):
         '''
         pass
     
+    def stop(self):
+        '''
+        Stop the robot.
+        '''
+        pass
+    
     def open_gripper(self):
         '''
         Open the gripper.

@@ -5,9 +5,9 @@ Author: Hongjie Fang, Junfeng Ding.
 '''
 import time
 import logging
-import flexivrdk
 import numpy as np
 
+from easyrobot.robot import flexivrdk
 from easyrobot.robot.base import RobotBase
 
 
