@@ -51,7 +51,7 @@ class RobotBase(object):
         Start streaming.
         
         Parameters:
-        - delay_time: float, optional, default: 5.0, the delay time before collecting data.
+        - delay_time: float, optional, default: 0.0, the delay time before collecting data.
         '''
         if self.with_streaming is False:
             raise AttributeError('If you want to use streaming function, the "shm_name" attribute should be set correctly.')
@@ -148,7 +148,7 @@ class RobotBase(object):
         '''
         return self.gripper.get_info()
 
-    def action(self, action_dict, wait = False, **kwargs):
+    def action(self, *args, **kwargs):
         '''
         Unified robot action.
         '''

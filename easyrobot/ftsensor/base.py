@@ -1,5 +1,5 @@
 '''
-Pedal Base Interface.
+Force/Torque Sensor Base Interface.
 
 Author: Hongjie Fang.
 '''
@@ -12,7 +12,7 @@ import numpy as np
 from easyrobot.utils.shm import SharedMemoryManager
 
 
-class PedalBase(object):
+class FTSensorBase(object):
     def __init__(
         self, 
         shm_name: str = "none", 
@@ -23,10 +23,10 @@ class PedalBase(object):
         Initialization.
         
         Parameters:
-        - shm_name: str, optional, default: "none", the shared memory name of the pedal data, "none" means no shared memory object;
+        - shm_name: str, optional, default: "none", the shared memory name of the force/torque sensor data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
-        super(PedalBase, self).__init__()
+        super(FTSensorBase, self).__init__()
         self.is_streaming = False
         self.with_streaming = (shm_name != "none")
         self.streaming_freq = streaming_freq
@@ -39,8 +39,8 @@ class PedalBase(object):
         '''
         if self.with_streaming:
             info = np.array(self.get_info()).astype(np.int64)
-            self.shm_pedal = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
-            self.shm_pedal.execute(info)
+            self.shm_ftsensor = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
+            self.shm_ftsensor.execute(info)
 
     def streaming(self, delay_time = 0.0):
         '''
@@ -58,9 +58,9 @@ class PedalBase(object):
     def streaming_thread(self, delay_time = 0.0):
         time.sleep(delay_time)
         self.is_streaming = True
-        logging.info('[Pedal] Start streaming ...')
+        logging.info('[F/T Sensor] Start streaming ...')
         while self.is_streaming:
-            self.shm_pedal.execute(np.array(self.get_info()).astype(np.int64))
+            self.shm_ftsensor.execute(np.array(self.get_info()).astype(np.int64))
             time.sleep(1.0 / self.streaming_freq)
     
     def stop_streaming(self, permanent = True):
@@ -72,7 +72,7 @@ class PedalBase(object):
         '''
         self.is_streaming = False
         self.thread.join()
-        logging.info('[Pedal] Close streaming.')
+        logging.info('[F/T Sesor] Close streaming.')
         if permanent:
             self._close_shm()
             self.with_streaming = False
@@ -82,16 +82,27 @@ class PedalBase(object):
         Close shared memory objects.
         '''
         if self.with_streaming:
-            self.shm_pedal.close()
+            self.shm_ftsensor.close()
     
+    def get_force(self):
+        '''
+        Get the force sensor information.
+        '''
+        pass
+
+    def get_torque(self):
+        '''
+        Get the torque sensor information.
+        '''
+
     def get_info(self):
         '''
-        Get the pedal information.
+        Get the force/torque sensor information.
         '''
         return np.array([])
-    
+
     def action(self, *args, **kwargs):
         '''
-        Unified pedal action.
+        Unified force/torque sensor action.
         '''
         pass

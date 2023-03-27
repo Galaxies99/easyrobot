@@ -47,7 +47,7 @@ class GripperBase(object):
         Start streaming.
         
         Parameters:
-        - delay_time: float, optional, default: 5.0, the delay time before collecting data.
+        - delay_time: float, optional, default: 0.0, the delay time before collecting data.
         '''
         if self.with_streaming is False:
             raise AttributeError('If you want to use streaming function, the "shm_name" attribute should be set correctly.')
@@ -102,7 +102,7 @@ class GripperBase(object):
         '''
         pass
 
-    def action(self, position, **kwargs):
+    def action(self, *args, **kwargs):
         '''
         Unified gripper action.
         '''
