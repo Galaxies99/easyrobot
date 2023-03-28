@@ -58,6 +58,7 @@ class FlexivRobot(RobotBase):
             streaming_freq = streaming_freq, 
             **kwargs
         )
+        self.logger.info("Robot is now operational.")
     
     def enable(self):
         '''
@@ -65,14 +66,10 @@ class FlexivRobot(RobotBase):
         '''
         # Clear fault on robot server if any
         if self.is_fault():
-            self.logger.warning("Fault occurred on robot server, trying to clear ...")
-            # Try to clear the fault
             self.clear_fault()
             time.sleep(2)
-            # Check again
             if self.is_fault():
                 raise RuntimeError("The fault of the robot cannot be cleared.")
-            self.logger.info("Fault on robot server is cleared")
         
         # Enable the robot, make sure the E-stop is released before enabling
         self.robot.enable()
@@ -82,10 +79,7 @@ class FlexivRobot(RobotBase):
         while not self.is_operational():
             time.sleep(1)
             seconds_waited += 1
-            if seconds_waited == 10:
-                self.logger.warning("Still waiting for robot to become operational, please check that the robot 1) has no fault, 2) is booted into Auto mode")
-
-        self.logger.info("Robot is now operational.")
+        
 
     def clear_fault(self):
         self.robot.clearFault()
