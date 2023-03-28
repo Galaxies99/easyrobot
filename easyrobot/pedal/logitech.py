@@ -5,7 +5,6 @@ Author: Hao-Shu Fang, Hongjie Fang
 '''
 
 import pygame
-import logging
 import numpy as np
 
 from easyrobot.pedal.base import PedalBase
@@ -17,6 +16,7 @@ class LogitechG29Pedal(PedalBase):
     '''
     def __init__(
         self,
+        logger_name: str = "Logitech Pedal",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -25,6 +25,7 @@ class LogitechG29Pedal(PedalBase):
         Initialization.
         
         Parameters:
+        - logger_name: str, optional, default: "Logitech Pedal", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the pedal data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
@@ -36,12 +37,13 @@ class LogitechG29Pedal(PedalBase):
         self.js.init()
         self.num_axes = self.js.get_numaxes()
         self.num_buttons = self.js.get_numbuttons()
-        logging.info('[Pedal] Activated.')
         super(LogitechG29Pedal, self).__init__(
+            logger_name = logger_name,
             shm_name = shm_name,
             streaming_freq = streaming_freq,
             **kwargs
         )
+        self.logger.info('Activated.')
 
     def get_axes(self):
         '''

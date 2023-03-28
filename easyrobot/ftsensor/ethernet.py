@@ -9,13 +9,11 @@ Ref:
   [3] NetFT, Cameron Devine, Github, availabale at https://github.com/CameronDevine/NetFT
 '''
 
-import time
 import socket
 import struct
 import numpy as np
 
 from easyrobot.ftsensor.base import FTSensorBase
-from easyrobot.utils.shm import SharedMemoryManager
 
 
 class EthernetFTSensor(FTSensorBase):
@@ -27,6 +25,7 @@ class EthernetFTSensor(FTSensorBase):
         ip = '192.168.1.1',
         port = 49152,
         scale = (1000, 1000),
+        logger_name: str = "F/T Sensor",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -38,6 +37,7 @@ class EthernetFTSensor(FTSensorBase):
         - ip: optional, default: '192.168.1.1', the IP address of the ethernet force/torque sensor;
         - port: optional, default: 49152, the port of the ethernet force/torque sensor;
         - scale: tuple of (int, int), default: (1000, 1000), the scaling coefficient of the force and torque values;
+        - logger_name: str, optional, default: "F/T Sensor", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the force/torque sensor data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
@@ -49,6 +49,7 @@ class EthernetFTSensor(FTSensorBase):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.connect((self.ip, self.port))
         super(EthernetFTSensor, self).__init__(
+            logger_name = logger_name,
             shm_name = shm_name,
             streaming_freq = streaming_freq,
             **kwargs

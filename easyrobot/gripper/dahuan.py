@@ -6,7 +6,6 @@ Author: Junfeng Ding, Hongjie Fang
 
 import time
 import serial
-import logging
 import numpy as np
 import modbus_tk.defines as cst
 from modbus_tk import modbus_rtu
@@ -21,6 +20,7 @@ class DahuanAG95Gripper(GripperBase):
     def __init__(
         self, 
         port: str,
+        logger_name: str = "Dahuan Gripper",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -31,6 +31,7 @@ class DahuanAG95Gripper(GripperBase):
         Parameters
         ----------
         - port: str, required, the port of the Dahuan AG95 Gripper;
+        - logger_name: str, optional, default: "Dahuan Gripper", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
@@ -49,12 +50,13 @@ class DahuanAG95Gripper(GripperBase):
         self.last_timestamp = int(time.time() * 1000)
         self.activate()
         self.set_force(100)
-        logging.info('[Gripper] Activated.')
         super(DahuanAG95Gripper, self).__init__(
+            logger_name = logger_name,
             shm_name = shm_name,
             streaming_freq = streaming_freq,
             **kwargs
         )
+        self.logger.info('Activated.')
 
     def activate(self):
         '''

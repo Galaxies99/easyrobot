@@ -10,7 +10,6 @@ Refererences:
 import time
 import struct
 import serial
-import logging
 import threading
 import numpy as np
 
@@ -24,6 +23,7 @@ class Robotiq2FGripper(GripperBase):
     def __init__(
         self, 
         port: str, 
+        logger_name: str = "Robotiq Gripper",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -33,6 +33,7 @@ class Robotiq2FGripper(GripperBase):
         
         Parameters:
         - port: str, required, the port of the Robotiq 2F-(85/140) Gripper;
+        - logger_name: str, optional, default: "Robotiq Gripper", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
@@ -47,12 +48,13 @@ class Robotiq2FGripper(GripperBase):
         self.activate()
         self.close_gripper()
         self.open_gripper()
-        logging.info('[Gripper] Activated.')
         super(Robotiq2FGripper, self).__init__(
+            logger_name = logger_name,
             shm_name = shm_name,
             streaming_freq = streaming_freq,
             **kwargs
         )
+        self.logger.info('Activated.')
     
     def activate(self):
         '''

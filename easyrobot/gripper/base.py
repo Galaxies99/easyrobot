@@ -9,12 +9,14 @@ import logging
 import threading
 import numpy as np
 
+from easyrobot.utils.logger import ColoredLogger
 from easyrobot.utils.shm import SharedMemoryManager
 
 
 class GripperBase(object):
     def __init__(
         self, 
+        logger_name: str = "Gripper",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -23,10 +25,13 @@ class GripperBase(object):
         Initialization.
         
         Parameters:
+        - logger_name: str, optional, default: "Gripper", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         super(GripperBase, self).__init__()
+        logging.setLoggerClass(ColoredLogger)
+        self.logger = logging.getLogger(logger_name)
         self.is_streaming = False
         self.with_streaming = (shm_name != "none")
         self.streaming_freq = streaming_freq
@@ -58,7 +63,7 @@ class GripperBase(object):
     def streaming_thread(self, delay_time = 0.0):
         time.sleep(delay_time)
         self.is_streaming = True
-        logging.info('[Gripper] Start streaming ...')
+        self.logger.info('Start streaming ...')
         while self.is_streaming:
             self.shm_gripper.execute(np.array(self.get_info()).astype(np.int64))
             time.sleep(1.0 / self.streaming_freq)
@@ -72,7 +77,7 @@ class GripperBase(object):
         '''
         self.is_streaming = False
         self.thread.join()
-        logging.info('[Gripper] Close streaming.')
+        self.logger.info('Close streaming.')
         if permanent:
             self._close_shm()
             self.with_streaming = False

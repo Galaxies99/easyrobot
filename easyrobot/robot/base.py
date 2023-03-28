@@ -10,6 +10,7 @@ import threading
 import numpy as np
 
 from easyrobot.gripper.api import get_gripper
+from easyrobot.utils.logger import ColoredLogger
 from easyrobot.utils.shm import SharedMemoryManager
 
 
@@ -17,6 +18,7 @@ class RobotBase(object):
     def __init__(
         self, 
         gripper: dict = {},
+        logger_name: str = "Robot",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -26,10 +28,13 @@ class RobotBase(object):
         
         Parameters:
         - gripper: dict, optional, default: {}, the gripper parameters;
+        - logger_name: str, optional, default: "Robot", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the robot data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         super(RobotBase, self).__init__()
+        logging.setLoggerClass(ColoredLogger)
+        self.logger = logging.getLogger(logger_name)
         self.is_streaming = False
         self.gripper = get_gripper(**gripper)
         self.with_streaming = (shm_name != "none")
@@ -62,7 +67,7 @@ class RobotBase(object):
     def streaming_thread(self, delay_time = 0.0):
         time.sleep(delay_time)
         self.is_streaming = True
-        logging.info('[Robot] Start streaming ...')
+        self.logger.info('Start streaming ...')
         while self.is_streaming:
             self.shm_robot.execute((self.get_info()).astype(np.float64))
             time.sleep(1.0 / self.streaming_freq)
@@ -76,7 +81,7 @@ class RobotBase(object):
         '''
         self.is_streaming = False
         self.thread.join()
-        logging.info('[Robot] Close streaming.')
+        self.logger.info('Close streaming.')
         if permanent:
             self._close_shm()
             self.with_streaming = False

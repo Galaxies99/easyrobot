@@ -4,7 +4,6 @@ Flexiv robot interface, built upon Flexiv RDK: https://github.com/flexivrobotics
 Author: Hongjie Fang, Junfeng Ding.
 '''
 import time
-import logging
 import numpy as np
 
 from easyrobot.robot import flexivrdk
@@ -31,6 +30,7 @@ class FlexivRobot(RobotBase):
         robot_ip_address, 
         pc_ip_address,
         gripper = {},
+        logger_name: str = "Flexiv Robot",
         shm_name: str = "none", 
         streaming_freq: int = 30, 
         **kwargs
@@ -42,6 +42,7 @@ class FlexivRobot(RobotBase):
         - robot_ip_address: str, required, the ip address of the robot;
         - pc_ip_address: str, required, the ip address of the pc;
         - gripper: dict, optional, default: {}, the gripper parameters;
+        - logger_name: str, optional, default: "Fleixv Robot", the name of the logger;
         - shm_name: str, optional, default: "none", the shared memory name of the robot data, "none" means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
@@ -52,6 +53,7 @@ class FlexivRobot(RobotBase):
         self.DOF = len(self.get_robot_states().q)
         super(FlexivRobot, self).__init__(
             gripper = gripper,
+            logger_name = logger_name,
             shm_name = shm_name,
             streaming_freq = streaming_freq, 
             **kwargs
@@ -63,14 +65,14 @@ class FlexivRobot(RobotBase):
         '''
         # Clear fault on robot server if any
         if self.is_fault():
-            logging.warning("[Robot] Fault occurred on robot server, trying to clear ...")
+            self.logger.warning("Fault occurred on robot server, trying to clear ...")
             # Try to clear the fault
             self.clear_fault()
             time.sleep(2)
             # Check again
             if self.is_fault():
                 raise RuntimeError("The fault of the robot cannot be cleared.")
-            logging.info("[Robot] Fault on robot server is cleared")
+            self.logger.info("Fault on robot server is cleared")
         
         # Enable the robot, make sure the E-stop is released before enabling
         self.robot.enable()
@@ -81,9 +83,9 @@ class FlexivRobot(RobotBase):
             time.sleep(1)
             seconds_waited += 1
             if seconds_waited == 10:
-                logging.warning("[Robot] Still waiting for robot to become operational, please check that the robot 1) has no fault, 2) is booted into Auto mode")
+                self.logger.warning("Still waiting for robot to become operational, please check that the robot 1) has no fault, 2) is booted into Auto mode")
 
-        logging.info("[Robot] Robot is now operational.")
+        self.logger.info("Robot is now operational.")
 
     def clear_fault(self):
         self.robot.clearFault()
@@ -141,7 +143,7 @@ class FlexivRobot(RobotBase):
             self.set_mode(mode)
             time.sleep(sleep_time)
 
-        logging.info("[Robot] Set mode: {}".format(str(self.get_mode())))
+        self.logger.info("Set mode: {}".format(str(self.get_mode())))
     
     def execute_primitive(self, cmd):
         '''
@@ -151,7 +153,7 @@ class FlexivRobot(RobotBase):
         - cmd: primitive command string, e.x. "ptName(inputParam1=xxx, inputParam2=xxx, ...)"
         '''
         self.switch_mode("primitive")
-        logging.info("[Robot] Execute primitive: {}".format(cmd))
+        self.logger.info("Execute primitive: {}".format(cmd))
         self.robot.executePrimitive(cmd)
     
     def send_tcp_pose(
