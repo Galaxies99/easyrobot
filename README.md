@@ -29,3 +29,7 @@ Finally, `import easyrobot`!
 - **Pedal**(`.pedal`). Logitech G29.
 
 - **Force/Torque Sensor**(`.ftsensor`). ATI, OptoForce.
+
+## Acknowledgement & Reference
+
+The Flexiv robot interface is built upon the official Flexiv RDK: [https://github.com/flexivrobotics/flexiv_rdk/](https://github.com/flexivrobotics/flexiv_rdk/)

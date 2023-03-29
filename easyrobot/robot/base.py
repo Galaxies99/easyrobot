@@ -104,10 +104,22 @@ class RobotBase(object):
         Send the TCP pose to the robot.
         '''
         pass
+    
+    def stream_tcp_pose(self, pose, **kwargs):
+        '''
+        Stream the TCP pose to the robot.
+        '''
+        pass
 
     def send_joint_pos(self, pos, wait = False, **kwargs):
         '''
         Send the joint position to the robot.
+        '''
+        pass
+
+    def stream_joint_pos(self, pos, **kwargs):
+        '''
+        Stream the joint position to the robot.
         '''
         pass
     
