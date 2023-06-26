@@ -10,7 +10,7 @@ from easyrobot.ftsensor.base import FTSensorBase
 from easyrobot.ftsensor.optoforce import OptoForceFTSensor
 
 
-def get_gripper(**params):
+def get_ftsensor(**params):
     '''
     Get the force/torque sensor object from the force/torque sensor library.
     '''
