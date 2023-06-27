@@ -130,4 +130,10 @@ class AngleEncoder(EncoderBase):
                 remains.remove(re[b])
         if not ignore_error and count != len(ids):
             raise RuntimeError('Failure to receive all encoders, errors occurred in ID {}.'.format(remains))
+        self.last_info = ret
         return ret
+
+    def fetch_info(self):
+        if not self.is_streaming:
+            self.get_info(ignore_error = True)
+        return self.last_info
