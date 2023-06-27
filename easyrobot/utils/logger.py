@@ -1,6 +1,8 @@
 """
 Custom Logger.
+
 Authors: [airmind] and [Guillaume Algis] from stackoverflow.
+
 Ref: 
     1. https://stackoverflow.com/questions/384076/how-can-i-color-python-logging-output
 """
