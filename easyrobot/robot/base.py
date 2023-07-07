@@ -63,6 +63,10 @@ class RobotBase(object):
         self.thread = threading.Thread(target = self.streaming_thread, kwargs = {'delay_time': delay_time})
         self.thread.setDaemon(True)
         self.thread.start()
+        try:
+            self.gripper.streaming()
+        except Exception:
+            pass
     
     def streaming_thread(self, delay_time = 0.0):
         time.sleep(delay_time)
@@ -85,6 +89,10 @@ class RobotBase(object):
         if permanent:
             self._close_shm()
             self.with_streaming = False
+        try:
+            self.gripper.stop_streaming(permanent = permanent)
+        except Exception:
+            pass
     
     def _close_shm(self):
         '''
