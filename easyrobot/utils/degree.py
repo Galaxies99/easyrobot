@@ -35,7 +35,7 @@ def deg_distance(x, y, direction, w0 = True):
     (specified by parameter w0: whether include 0 in the range).
     """
     dis = (deg_clip(y) - deg_clip(x)) * direction
-    if dis < 0 or (dis == 0 and w0):
+    if dis < 0 or (dis == 0 and not w0):
         dis = dis + 360
     return dis
 
