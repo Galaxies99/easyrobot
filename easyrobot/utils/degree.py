@@ -1,5 +1,5 @@
 """
-Angle Degree Tran"sformation Functions.
+Angle Degree Transformation Functions.
 
 Authors: Hongjie Fang.
 """

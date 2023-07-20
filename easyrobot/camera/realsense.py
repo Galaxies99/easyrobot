@@ -102,4 +102,5 @@ class RealSenseCamera(CameraBase):
             frameset = self.align.process(frameset)
         color_image = np.asanyarray(frameset.get_color_frame().get_data()).astype(np.float32)
         depth_image = np.asanyarray(frameset.get_depth_frame().get_data()).astype(np.float32) / self.depth_scale
-        return np.concatenate((color_image, depth_image), axis = -1)
+        depth_image_reshaped = np.expand_dims(depth_image, axis = 2)
+        return np.concatenate((color_image, depth_image_reshaped), axis = -1)
