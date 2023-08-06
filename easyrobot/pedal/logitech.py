@@ -17,7 +17,7 @@ class LogitechG29Pedal(PedalBase):
     def __init__(
         self,
         logger_name: str = "Logitech Pedal",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -26,7 +26,7 @@ class LogitechG29Pedal(PedalBase):
         
         Parameters:
         - logger_name: str, optional, default: "Logitech Pedal", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the pedal data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the pedal data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         pygame.init()
