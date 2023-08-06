@@ -21,7 +21,7 @@ class DahuanAG95Gripper(GripperBase):
         self, 
         port: str,
         logger_name: str = "Dahuan Gripper",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -32,7 +32,7 @@ class DahuanAG95Gripper(GripperBase):
         ----------
         - port: str, required, the port of the Dahuan AG95 Gripper;
         - logger_name: str, optional, default: "Dahuan Gripper", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the gripper data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         self.master = modbus_rtu.RtuMaster(

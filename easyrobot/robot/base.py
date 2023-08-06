@@ -19,7 +19,7 @@ class RobotBase(object):
         self, 
         gripper: dict = {},
         logger_name: str = "Robot",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ): 
@@ -29,7 +29,7 @@ class RobotBase(object):
         Parameters:
         - gripper: dict, optional, default: {}, the gripper parameters;
         - logger_name: str, optional, default: "Robot", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the robot data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the robot data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         super(RobotBase, self).__init__()
@@ -37,7 +37,7 @@ class RobotBase(object):
         self.logger = logging.getLogger(logger_name)
         self.is_streaming = False
         self.gripper = get_gripper(**gripper)
-        self.with_streaming = (shm_name != "none")
+        self.with_streaming = (shm_name is not None)
         self.streaming_freq = streaming_freq
         self.shm_name = shm_name
         self._prepare_shm()

@@ -24,7 +24,7 @@ class Robotiq2FGripper(GripperBase):
         self, 
         port: str, 
         logger_name: str = "Robotiq Gripper",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -34,7 +34,7 @@ class Robotiq2FGripper(GripperBase):
         Parameters:
         - port: str, required, the port of the Robotiq 2F-(85/140) Gripper;
         - logger_name: str, optional, default: "Robotiq Gripper", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the gripper data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         self.port = port

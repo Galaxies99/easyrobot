@@ -25,8 +25,8 @@ class EthernetFTSensor(FTSensorBase):
         ip = '192.168.1.1',
         port = 49152,
         scale = (1000, 1000),
-        logger_name: str = "F/T Sensor",
-        shm_name: str = "none", 
+        logger_name: str = "Ethernet F/T Sensor",
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -38,7 +38,7 @@ class EthernetFTSensor(FTSensorBase):
         - port: optional, default: 49152, the port of the ethernet force/torque sensor;
         - scale: tuple of (int, int), default: (1000, 1000), the scaling coefficient of the force and torque values;
         - logger_name: str, optional, default: "F/T Sensor", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the force/torque sensor data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the force/torque sensor data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         self.ip = ip

@@ -13,7 +13,7 @@ def get_robot(**params):
     '''
     Get the robot object from the robot library.
     '''
-    name = params.get('name', 'none')
+    name = params.get('name', None)
     try:
         if re.fullmatch('[ -_]*flexiv[ -_]*', str.lower(name)):
             return FlexivRobot(**params)

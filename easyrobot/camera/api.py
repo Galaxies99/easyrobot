@@ -5,19 +5,27 @@ Author: Hongjie Fang.
 '''
 
 import re
-from easyrobot.camera.base import CameraBase
-from easyrobot.camera.realsense import RealSenseCamera
+from easyrobot.camera.base import RGBCameraBase, RGBDCameraBase
+from easyrobot.camera.realsense import RealSenseRGBDCamera
 
 
-def get_camera(**params):
+def get_rgb_camera(**params):
     '''
     Get the camera object from the camera library.
     '''
-    name = params.get('name', 'none')
+    name = params.get('name', None)
+    return RGBCameraBase(**params)
+
+
+def get_rgbd_camera(**params):
+    '''
+    Get the camera object from the camera library.
+    '''
+    name = params.get('name', None)
     try:
         if re.fullmatch('[ -_]*realsense[ -_]*', str.lower(name)):
-            return RealSenseCamera(**params)
+            return RealSenseRGBDCamera(**params)
         else:
-            return CameraBase(**params)
+            return RGBDCameraBase(**params)
     except Exception:
-        return CameraBase(**params)
+        return RGBDCameraBase(**params)

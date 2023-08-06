@@ -61,8 +61,8 @@ class AngleEncoder(EncoderBase):
         port,
         baudrate = 115200,
         sleep_gap = 0.002,
-        logger_name: str = "AngleEncoder",
-        shm_name: str = "none", 
+        logger_name: str = "Angle Encoder",
+        shm_name: str = None, 
         streaming_freq: int = 30,
         **kwargs 
     ):
@@ -72,7 +72,7 @@ class AngleEncoder(EncoderBase):
         - port, baudrate, (**kwargs): the args of the serial agents;
         - sleep_gap: float, optional, default: 0.002, the sleep gap between adjacent write options;
         - logger_name: str, optional, default: "AngleEncoder", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the angle encoder data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the angle encoder data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         """
         self.ids = ids

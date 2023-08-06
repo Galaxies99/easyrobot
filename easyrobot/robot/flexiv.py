@@ -31,7 +31,7 @@ class FlexivRobot(RobotBase):
         pc_ip_address,
         gripper = {},
         logger_name: str = "Flexiv Robot",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -43,7 +43,7 @@ class FlexivRobot(RobotBase):
         - pc_ip_address: str, required, the ip address of the pc;
         - gripper: dict, optional, default: {}, the gripper parameters;
         - logger_name: str, optional, default: "Fleixv Robot", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the robot data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the robot data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         self.robot = flexivrdk.Robot(robot_ip_address, pc_ip_address)

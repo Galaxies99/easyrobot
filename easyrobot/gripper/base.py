@@ -17,7 +17,7 @@ class GripperBase(object):
     def __init__(
         self, 
         logger_name: str = "Gripper",
-        shm_name: str = "none", 
+        shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -26,14 +26,14 @@ class GripperBase(object):
         
         Parameters:
         - logger_name: str, optional, default: "Gripper", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the gripper data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the gripper data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         super(GripperBase, self).__init__()
         logging.setLoggerClass(ColoredLogger)
         self.logger = logging.getLogger(logger_name)
         self.is_streaming = False
-        self.with_streaming = (shm_name != "none")
+        self.with_streaming = (shm_name is not None)
         self.streaming_freq = streaming_freq
         self.shm_name = shm_name
         self._prepare_shm()

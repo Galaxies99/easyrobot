@@ -7,12 +7,12 @@ Author: Hongjie Fang, Jirong Liu.
 import numpy as np
 import pyrealsense2 as rs
 
-from easyrobot.camera.base import CameraBase
+from easyrobot.camera.base import RGBCameraBase, RGBDCameraBase
 
 
-class RealSenseCamera(CameraBase):
+class RealSenseRGBDCamera(RGBDCameraBase):
     '''
-    RealSense Camera.
+    RealSense RGB-D Camera.
     '''
     def __init__(
         self, 
@@ -20,8 +20,9 @@ class RealSenseCamera(CameraBase):
         frame_rate = 30, 
         resolution = (1280, 720),
         align = True,
-        logger_name: str = "Camera",
-        shm_name: str = "none", 
+        logger_name: str = "RealSense RGBD Camera",
+        shm_name_rgb: str = None, 
+        shm_name_depth: str = None,
         streaming_freq: int = 30, 
         **kwargs
     ):
@@ -34,10 +35,10 @@ class RealSenseCamera(CameraBase):
         - resolution: (int, int), optional, default: (1280, 720), the resolution of the realsense camera;
         - align: bool, optional, default: True, whether align the frameset with the RGB image;
         - logger_name: str, optional, default: "Camera", the name of the logger;
-        - shm_name: str, optional, default: "none", the shared memory name of the camera data, "none" means no shared memory object;
+        - shm_name: str, optional, default: None, the shared memory name of the camera data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
-        super(RealSenseCamera, self).__init__()
+        super(RealSenseRGBDCamera, self).__init__()
         self.pipeline = rs.pipeline()
         self.config = rs.config()
         self.serial = serial
@@ -57,9 +58,10 @@ class RealSenseCamera(CameraBase):
         self.align_to = rs.stream.color
         self.align = rs.align(self.align_to)
         self.with_align = align
-        super(RealSenseCamera, self).__init__(
+        super(RealSenseRGBDCamera, self).__init__(
             logger_name = logger_name,
-            shm_name = shm_name,
+            shm_name_rgb = shm_name_rgb,
+            shm_name_depth = shm_name_depth,
             streaming_freq = streaming_freq,
             **kwargs
         )
@@ -70,7 +72,7 @@ class RealSenseCamera(CameraBase):
         '''
         frames = self.pipeline.wait_for_frames()
         color_frame = frames.get_color_frame()
-        color_image = np.asanyarray(color_frame.get_data()).astype(np.float32)
+        color_image = np.asanyarray(color_frame.get_data()).astype(np.uint8)
         return color_image
 
     def get_depth_image(self):
@@ -82,25 +84,14 @@ class RealSenseCamera(CameraBase):
         depth_image = np.asanyarray(depth_frame.get_data()).astype(np.float32) / self.depth_scale
         return depth_image
 
-    def get_rgbd_image(self):
+    def get_info(self):
         '''
         Get the RGB image along with the depth image from the camera.
         '''
         frameset = self.pipeline.wait_for_frames()
         if self.with_align:
             frameset = self.align.process(frameset)
-        color_image = np.asanyarray(frameset.get_color_frame().get_data()).astype(np.float32)
+        color_image = np.asanyarray(frameset.get_color_frame().get_data()).astype(np.uint8)
         depth_image = np.asanyarray(frameset.get_depth_frame().get_data()).astype(np.float32) / self.depth_scale
         return color_image, depth_image
 
-    def get_info(self):         
-        '''
-        Get the data from camera (concatenated RGB-D image).
-        '''
-        frameset = self.pipeline.wait_for_frames()
-        if self.with_align:
-            frameset = self.align.process(frameset)
-        color_image = np.asanyarray(frameset.get_color_frame().get_data()).astype(np.float32)
-        depth_image = np.asanyarray(frameset.get_depth_frame().get_data()).astype(np.float32) / self.depth_scale
-        depth_image_reshaped = np.expand_dims(depth_image, axis = 2)
-        return np.concatenate((color_image, depth_image_reshaped), axis = -1)

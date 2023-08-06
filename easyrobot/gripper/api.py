@@ -14,7 +14,7 @@ def get_gripper(**params):
     '''
     Get the gripper object from the gripper library.
     '''
-    name = params.get('name', 'none')
+    name = params.get('name', None)
     try:
         if re.fullmatch('[ -_]*robotiq[ -_]*2f[ -_]*(85|140)[ -_]*', str.lower(name)):
             return Robotiq2FGripper(**params)

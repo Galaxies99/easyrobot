@@ -14,7 +14,7 @@ def get_ftsensor(**params):
     '''
     Get the force/torque sensor object from the force/torque sensor library.
     '''
-    name = params.get('name', 'none')
+    name = params.get('name', None)
     try:
         if re.fullmatch('[ -_]*ati[ -_]*', str.lower(name)):
             return ATIFTSensor(**params)
