@@ -1,5 +1,5 @@
 '''
-Force/Torque Sensor Base Interface.
+Sensor Base Interface.
 
 Author: Hongjie Fang.
 '''
@@ -10,13 +10,13 @@ import threading
 import numpy as np
 
 from easyrobot.utils.logger import ColoredLogger
-from easyrobot.utils.shm import SharedMemoryManager
+from easyrobot.utils.shared_memory import SharedMemoryManager
 
 
-class FTSensorBase(object):
+class SensorBase(object):
     def __init__(
         self, 
-        logger_name: str = "F/T Sensor",
+        logger_name: str = "Sensor",
         shm_name: str = None, 
         streaming_freq: int = 30, 
         **kwargs
@@ -25,11 +25,11 @@ class FTSensorBase(object):
         Initialization.
         
         Parameters:
-        - logger_name: str, optional, default: "F/T Sensor", the name of the logger;
-        - shm_name: str, optional, default: None, the shared memory name of the force/torque sensor data, None means no shared memory object;
+        - logger_name: str, optional, default: "Sensor", the name of the logger;
+        - shm_name: str, optional, default: None, the shared memory name of the sensor data, None means no shared memory object;
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
-        super(FTSensorBase, self).__init__()
+        super(SensorBase, self).__init__()
         logging.setLoggerClass(ColoredLogger)
         self.logger = logging.getLogger(logger_name)
         self.is_streaming = False
@@ -43,9 +43,9 @@ class FTSensorBase(object):
         Prepare shared memory objects.
         '''
         if self.with_streaming:
-            info = np.array(self.get_info()).astype(np.int64)
-            self.shm_ftsensor = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
-            self.shm_ftsensor.execute(info)
+            info = np.array(self.get_info()).astype(np.float32)
+            self.shm_sensor = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
+            self.shm_sensor.execute(info)
 
     def streaming(self, delay_time = 0.0):
         '''
@@ -65,7 +65,7 @@ class FTSensorBase(object):
         self.is_streaming = True
         self.logger.info('Start streaming ...')
         while self.is_streaming:
-            self.shm_ftsensor.execute(np.array(self.get_info()).astype(np.int64))
+            self.shm_sensor.execute(np.array(self.get_info()).astype(np.int64))
             time.sleep(1.0 / self.streaming_freq)
     
     def stop_streaming(self, permanent = True):
@@ -87,27 +87,16 @@ class FTSensorBase(object):
         Close shared memory objects.
         '''
         if self.with_streaming:
-            self.shm_ftsensor.close()
-    
-    def get_force(self):
-        '''
-        Get the force sensor information.
-        '''
-        pass
-
-    def get_torque(self):
-        '''
-        Get the torque sensor information.
-        '''
+            self.shm_sensor.close()
 
     def get_info(self):
         '''
-        Get the force/torque sensor information.
+        Get the sensor information.
         '''
         return np.array([])
 
     def action(self, *args, **kwargs):
         '''
-        Unified force/torque sensor action.
+        Unified sensor action.
         '''
         pass

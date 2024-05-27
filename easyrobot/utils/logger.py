@@ -1,59 +1,26 @@
 """
 Custom Logger.
-
-Authors: [airmind] and [Guillaume Algis] from stackoverflow.
-
-Ref: 
-    1. https://stackoverflow.com/questions/384076/how-can-i-color-python-logging-output
 """
+
 import logging
-
-
-BLACK, RED, GREEN, ORANGE, BLUE, MAGENTA, CYAN, GREY = range(8)
-
-RESET_SEQ = "\033[0m"
-COLOR_SEQ = "\033[1;%dm"
-BOLD_SEQ = "\033[1m"
-
-def formatter_message(message, use_color = True):
-    if use_color:
-        message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
-    else:
-        message = message.replace("$RESET", "").replace("$BOLD", "")
-    return message
-
-COLORS = {
-    'WARNING': ORANGE,
-    'INFO': GREEN,
-    'DEBUG': BLUE,
-    'CRITICAL': RED,
-    'ERROR': RED
-}
-
-
-class ColoredFormatter(logging.Formatter):
-    def __init__(self, msg, use_color = True):
-        logging.Formatter.__init__(self, msg)
-        self.use_color = use_color
-
-    def format(self, record):
-        levelname = record.levelname
-        if self.use_color and levelname in COLORS:
-            levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
-            record.levelname = levelname_color
-        return logging.Formatter.format(self, record)
+from colorlog import ColoredFormatter
 
 
 class ColoredLogger(logging.Logger):
-    FORMAT = "[$BOLD%(name)-s$RESET][%(levelname)-s]  %(message)s ($BOLD%(filename)s$RESET:%(lineno)d)"
-    COLOR_FORMAT = formatter_message(FORMAT, True)
     def __init__(self, name):
-        logging.Logger.__init__(self, name)
-
-        color_formatter = ColoredFormatter(self.COLOR_FORMAT)
-
-        console = logging.StreamHandler()
-        console.setFormatter(color_formatter)
-
-        self.addHandler(console)
-        return
+        super(ColoredLogger, self).__init__(name)
+        formatter = ColoredFormatter(
+            "[%(bold)s%(name)-s%(reset)s] %(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
+            datefmt = None,
+            reset = True,
+            log_colors = {
+                "DEBUG": "cyan",
+                "INFO": "green",
+                "WARNING": "yellow",
+                "ERROR": "red",
+                "CRITICAL": "red,bg_white",
+            },
+        )
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        self.addHandler(console_handler)

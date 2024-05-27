@@ -11,7 +11,7 @@ import numpy as np
 
 from easyrobot.gripper.api import get_gripper
 from easyrobot.utils.logger import ColoredLogger
-from easyrobot.utils.shm import SharedMemoryManager
+from easyrobot.utils.shared_memory import SharedMemoryManager
 
 
 class RobotBase(object):

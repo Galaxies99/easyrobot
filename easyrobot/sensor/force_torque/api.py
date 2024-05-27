@@ -5,12 +5,12 @@ Author: Hongjie Fang.
 '''
 
 import re
-from easyrobot.ftsensor.ati import ATIFTSensor
-from easyrobot.ftsensor.base import FTSensorBase
-from easyrobot.ftsensor.optoforce import OptoForceFTSensor
+from easyrobot.sensor.force_torque.ati import ATIFTSensor
+from easyrobot.sensor.force_torque.base import FTSensorBase
+from easyrobot.sensor.force_torque.optoforce import OptoForceFTSensor
 
 
-def get_ftsensor(**params):
+def get_force_torque_sensor(**params):
     '''
     Get the force/torque sensor object from the force/torque sensor library.
     '''

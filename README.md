@@ -35,7 +35,8 @@ Finally, `import easyrobot`!
 
 - **Pedal**(`.pedal`). Logitech G29.
 
-- **Force/Torque Sensor**(`.ftsensor`). ATI, OptoForce.
+- **Sensor**(`.sensor`).
+  - **Force/Torque Sensor**(`.sensor.force_torque`). ATI, OptoForce.
 
 ## Acknowledgement & Reference
 

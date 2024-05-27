@@ -10,7 +10,7 @@ import threading
 import numpy as np
 
 from easyrobot.utils.logger import ColoredLogger
-from easyrobot.utils.shm import SharedMemoryManager
+from easyrobot.utils.shared_memory import SharedMemoryManager
 
 
 class PedalBase(object):

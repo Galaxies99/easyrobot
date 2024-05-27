@@ -13,7 +13,7 @@ import socket
 import struct
 import numpy as np
 
-from easyrobot.ftsensor.base import FTSensorBase
+from easyrobot.sensor.force_torque.base import FTSensorBase
 
 
 class EthernetFTSensor(FTSensorBase):
@@ -48,6 +48,7 @@ class EthernetFTSensor(FTSensorBase):
         self.shm_name = shm_name
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.connect((self.ip, self.port))
+        self.logger.info("Connected.")
         super(EthernetFTSensor, self).__init__(
             logger_name = logger_name,
             shm_name = shm_name,
