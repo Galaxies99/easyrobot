@@ -7,6 +7,7 @@ Author: Hongjie Fang.
 import re
 from easyrobot.robot.base import RobotBase
 from easyrobot.robot.flexiv import FlexivRobot
+from easyrobot.robot.virtual import VirtualRobot
 
 
 def get_robot(**params):
@@ -15,7 +16,9 @@ def get_robot(**params):
     '''
     name = params.get('name', None)
     try:
-        if re.fullmatch('[ -_]*flexiv[ -_]*', str.lower(name)):
+        if re.fullmatch('[ -_]*virtual[ -_]*', str.lower(name)):
+            return VirtualRobot(**params)
+        elif re.fullmatch('[ -_]*flexiv[ -_]*', str.lower(name)):
             return FlexivRobot(**params)
         else:
             return RobotBase(**params)
