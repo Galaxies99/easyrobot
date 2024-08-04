@@ -41,7 +41,7 @@ class EncoderBase(object):
         Prepare shared memory objects.
         '''
         if self.with_streaming:
-            info = np.array(self.get_info()).astype(np.float)
+            info = np.array(self.get_info()).astype(np.float64)
             self.shm_enc = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
             self.shm_enc.execute(info)
 
@@ -63,7 +63,7 @@ class EncoderBase(object):
         self.is_streaming = True
         self.logger.info('Start streaming ...')
         while self.is_streaming:
-            self.shm_enc.execute(np.array(self.get_info(ignore_error = True)).astype(np.int64))
+            self.shm_enc.execute(np.array(self.get_info(ignore_error = True)).astype(np.float64))
             time.sleep(1.0 / self.streaming_freq)
     
     def stop_streaming(self, permanent = True):
