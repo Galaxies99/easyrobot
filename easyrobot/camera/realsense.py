@@ -19,6 +19,7 @@ class RealSenseRGBDCamera(RGBDCameraBase):
         serial, 
         frame_rate = 30, 
         resolution = (1280, 720),
+        enable_emitter = True,
         align = True,
         logger_name: str = "RealSense RGBD Camera",
         shm_name_rgb: str = None, 
@@ -33,6 +34,7 @@ class RealSenseRGBDCamera(RGBDCameraBase):
         - serial: str, required, the serial number of the realsense device;
         - frame_rate: int, optional, default: 15, the framerate of the realsense camera;
         - resolution: (int, int), optional, default: (1280, 720), the resolution of the realsense camera;
+        - enable_emitter: bool, optional, default: True, whether to enable the emitter;
         - align: bool, optional, default: True, whether align the frameset with the RGB image;
         - logger_name: str, optional, default: "Camera", the name of the logger;
         - shm_name: str, optional, default: None, the shared memory name of the camera data, None means no shared memory object;
@@ -51,13 +53,22 @@ class RealSenseRGBDCamera(RGBDCameraBase):
         else:
             self.depth_scale = 1000
         # ================================================== #
+        # Set up device and stream
         self.config.enable_device(self.serial)
         self.config.enable_stream(rs.stream.depth, depth_resolution[0], depth_resolution[1], rs.format.z16, frame_rate)
         self.config.enable_stream(rs.stream.color, resolution[0], resolution[1], rs.format.rgb8, frame_rate)
-        self.pipeline.start(self.config)
+        # Start pipeline
+        pipeline_profile = self.pipeline.start(self.config)
+        # Set up emitter
+        depth_sensor = pipeline_profile.get_device().query_sensors()[0]
+        depth_sensor.set_option(rs.option.emitter_enabled, int(enable_emitter))
+        # Set up alignment
         self.align_to = rs.stream.color
         self.align = rs.align(self.align_to)
         self.with_align = align
+        # Get intrinsic
+        color_profile = pipeline_profile.get_stream(rs.stream.color) 
+        self.intrinsic = color_profile.as_video_stream_profile().get_intrinsics()
         super(RealSenseRGBDCamera, self).__init__(
             logger_name = logger_name,
             shm_name_rgb = shm_name_rgb,
@@ -95,3 +106,13 @@ class RealSenseRGBDCamera(RGBDCameraBase):
         depth_image = np.asanyarray(frameset.get_depth_frame().get_data()).astype(np.float32) / self.depth_scale
         return color_image, depth_image
 
+    def get_intrinsic(self, return_mat = True):
+        if return_mat:
+            return np.array([
+                [self.intrinsic.fx, 0., self.intrinsic.ppx],
+                [0., self.intrinsic.fy, self.intrinsic.ppy],
+                [0., 0., 1.]
+            ])
+        else:
+            return self.intrinsic
+    
