@@ -15,6 +15,8 @@ def get_robot(**params):
     Get the robot object from the robot library.
     '''
     name = params.get('name', None)
+    if name is not None:
+        del params['name']
     try:
         if re.fullmatch('[ -_]*virtual[ -_]*', str.lower(name)):
             return VirtualRobot(**params)

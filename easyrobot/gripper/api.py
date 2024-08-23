@@ -16,6 +16,8 @@ def get_gripper(**params):
     Get the gripper object from the gripper library.
     '''
     name = params.get('name', None)
+    if name is not None:
+        del params['name']
     try:
         if re.fullmatch('[ -_]*virtual[ -_]*', str.lower(name)):
             return VirtualGripper(**params)

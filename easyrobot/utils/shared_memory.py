@@ -29,7 +29,9 @@ class SharedMemoryManager(object):
         self.name = name
         self.type = type
         self.shape = shape
-        self.dtype = dtype
+        if isinstance(dtype, str):
+            dtype = to_dtype(dtype)
+        self.dtype = np.dtype(dtype)
         if self.type not in [0, 1]:
             raise AttributeError('Invalid type in shared memory manager.')
         if self.type == 0:
@@ -60,4 +62,9 @@ class SharedMemoryManager(object):
     def close(self):
         self.shared_memory.close()
         self.shared_memory.unlink()
-    
+
+def to_dtype(s):
+    if s == "bool":
+        return bool
+    else:
+        return getattr(np, s)

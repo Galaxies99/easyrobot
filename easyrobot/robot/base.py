@@ -47,7 +47,7 @@ class RobotBase(object):
         Prepare shared memory objects.
         '''
         if self.with_streaming:
-            info = np.array(self.get_info()).astype(np.float64)
+            info = np.array(self.get_info()).astype(np.float32)
             self.shm_robot = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
             self.shm_robot.execute(info)
         
@@ -73,7 +73,7 @@ class RobotBase(object):
         self.is_streaming = True
         self.logger.info('Start streaming ...')
         while self.is_streaming:
-            self.shm_robot.execute((self.get_info()).astype(np.float64))
+            self.shm_robot.execute((self.get_info()).astype(np.float32))
             time.sleep(1.0 / self.streaming_freq)
     
     def stop_streaming(self, permanent = True):

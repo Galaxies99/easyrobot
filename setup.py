@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'easyrobot',
-    version = '0.0.2',
+    version = '0.0.3',
     license = 'MIT',
     description = 'An easy and unified interface for robot (and grippers, etc.)',
     author = "Hongjie Fang",

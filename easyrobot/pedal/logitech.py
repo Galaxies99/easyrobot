@@ -80,4 +80,4 @@ class LogitechG29Pedal(PedalBase):
         return np.array(button_presses)
 
     def get_info(self):
-        return np.concatenate((self.get_axes(), self.get_buttons))
+        return np.concatenate((self.get_axes(), self.get_buttons)).astype(np.float32)

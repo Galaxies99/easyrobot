@@ -43,7 +43,7 @@ class PedalBase(object):
         Prepare shared memory objects.
         '''
         if self.with_streaming:
-            info = np.array(self.get_info()).astype(np.int64)
+            info = np.array(self.get_info()).astype(np.float32)
             self.shm_pedal = SharedMemoryManager(self.shm_name, 0, info.shape, info.dtype)
             self.shm_pedal.execute(info)
 
@@ -65,7 +65,7 @@ class PedalBase(object):
         self.is_streaming = True
         self.logger.info('Start streaming ...')
         while self.is_streaming:
-            self.shm_pedal.execute(np.array(self.get_info()).astype(np.int64))
+            self.shm_pedal.execute(np.array(self.get_info()).astype(np.float32))
             time.sleep(1.0 / self.streaming_freq)
     
     def stop_streaming(self, permanent = True):

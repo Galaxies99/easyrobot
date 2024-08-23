@@ -134,7 +134,7 @@ class RGBDCameraBase(object):
         if self.with_streaming:
             rgb, depth = self.get_info()
             rgb = np.array(rgb).astype(np.uint8)
-            depth = np.array(depth).astype(np.float64)
+            depth = np.array(depth).astype(np.float32)
             if self.with_streaming_rgb:
                 self.shm_camera_rgb = SharedMemoryManager(self.shm_name_rgb, 0, rgb.shape, rgb.dtype)
                 self.shm_camera_rgb.execute(rgb)
@@ -162,7 +162,7 @@ class RGBDCameraBase(object):
         while self.is_streaming:
             rgb, depth = self.get_info()
             rgb = np.array(rgb).astype(np.uint8)
-            depth = np.array(depth).astype(np.float64)
+            depth = np.array(depth).astype(np.float32)
             if self.with_streaming_rgb:
                 self.shm_camera_rgb.execute(rgb)
             if self.with_streaming_depth:

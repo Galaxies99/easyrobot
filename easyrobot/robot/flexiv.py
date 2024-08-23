@@ -320,13 +320,13 @@ class FlexivRobot(RobotBase):
         '''
         state = self.get_robot_states()
         return np.concatenate([
-            state.q.copy(),
-            state.dq.copy(),
-            state.tcpPose.copy(),
-            state.tcpVel.copy(),
-            state.extWrenchInTcp.copy(),
-            state.extWrenchInBase.copy()
-        ])
+            state.q.copy(),               # 0:7 joint pos
+            state.dq.copy(),              # 7:14 joint vel
+            state.tcpPose.copy(),         # 14:21 tcp pose
+            state.tcpVel.copy(),          # 21:27 tcp vel
+            state.extWrenchInTcp.copy(),  # 27:33 wrench in tcp
+            state.extWrenchInBase.copy()  # 33:39 wrench in base
+        ]).astype(np.float32)
 
     def stop(self):
         self.robot.stop()

@@ -112,7 +112,7 @@ class RealSenseRGBDCamera(RGBDCameraBase):
                 [self.intrinsic.fx, 0., self.intrinsic.ppx],
                 [0., self.intrinsic.fy, self.intrinsic.ppy],
                 [0., 0., 1.]
-            ])
+            ], dtype = np.float32)
         else:
             return self.intrinsic
     

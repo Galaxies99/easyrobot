@@ -119,9 +119,9 @@ class AngleEncoder(EncoderBase):
         count = 0
         remains = ids.copy()
         if ignore_error:
-            ret = np.copy(self.last_info).astype(np.float64)
+            ret = np.copy(self.last_info).astype(np.float32)
         else:
-            ret = np.zeros(self.ids_num).astype(np.float64)
+            ret = np.zeros(self.ids_num).astype(np.float32)
         for b in range(len(re) - 10):
             if re[b + 1] == 3 and re[b + 2] == 6 and re[b] in remains:
                 angle = 360 * (re[b + 3] * 256 + re[b + 4]) / 4096
