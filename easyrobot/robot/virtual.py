@@ -30,7 +30,7 @@ class VirtualRobot(RobotBase):
         - streaming_freq: int, optional, default: 30, the streaming frequency.
         '''
         self.info_shape = info_shape
-        self.info = np.zeros(self.info_shape, dtype = np.int64)
+        self.info = np.zeros(self.info_shape, dtype = np.float32)
         super(VirtualRobot, self).__init__(
             gripper = gripper,
             logger_name = logger_name,
