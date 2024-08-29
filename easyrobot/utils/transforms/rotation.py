@@ -9,7 +9,7 @@ import functools
 import numpy as np
 import pytorch3d.transforms.rotation_conversions as ptc
 
-from easyrobot.utils import rotation_utils as rtu
+from easyrobot.utils.transforms import rotation_utils as rtu
 
 
 def rotation_transform(
