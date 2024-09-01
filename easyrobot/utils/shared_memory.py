@@ -61,7 +61,8 @@ class SharedMemoryManager(object):
 
     def close(self):
         self.shared_memory.close()
-        self.shared_memory.unlink()
+        if self.type == 0:
+            self.shared_memory.unlink()
 
 def to_dtype(s):
     if s == "bool":

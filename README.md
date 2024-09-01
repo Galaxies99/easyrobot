@@ -23,6 +23,23 @@ cd easyrobot
 python setup.py install
 ```
 
+Find `multiprocessing/shared_memory.py` file in the python site-packages folder, then edit the following lines
+
+```python
+from .resource_tracker import register
+register(self._name, "shared_memory")
+```
+
+into
+
+```python
+if create:
+    from .resource_tracker import register
+    register(self._name, "shared_memory")
+```
+
+according to the suggestions in [python bug report center](https://bugs.python.org/issue39959).
+
 Finally, `import easyrobot`!
 
 ## Supported Devices
