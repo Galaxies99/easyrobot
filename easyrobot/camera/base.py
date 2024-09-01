@@ -88,12 +88,22 @@ class RGBCameraBase(object):
         '''
         if self.with_streaming:
             self.shm_camera.close()
+        
 
     def get_info(self):
         '''
         Get the camera observation (RGB).
         '''
         return np.array([])
+    
+    def stop(self):
+        '''
+        Stop.
+        '''
+        if self.is_streaming:
+            self.stop_streaming(permanent = True)
+        else:
+            self._close_shm()
 
 
 
@@ -198,4 +208,11 @@ class RGBDCameraBase(object):
         '''
         return np.array([]), np.array([])
 
-
+    def stop(self):
+        '''
+        Stop.
+        '''
+        if self.is_streaming:
+            self.stop_streaming(permanent = True)
+        else:
+            self._close_shm()

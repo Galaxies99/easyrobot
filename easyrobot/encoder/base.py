@@ -92,3 +92,12 @@ class EncoderBase(object):
         Receive signals from the encoders.
         """
         return np.array([])
+
+    def stop(self):
+        '''
+        Stop.
+        '''
+        if self.is_streaming:
+            self.stop_streaming(permanent = True)
+        else:
+            self._close_shm()

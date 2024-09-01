@@ -329,4 +329,5 @@ class FlexivRobot(RobotBase):
         ]).astype(np.float32)
 
     def stop(self):
+        super(FlexivRobot, self).stop()
         self.robot.stop()

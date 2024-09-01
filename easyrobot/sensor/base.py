@@ -100,3 +100,12 @@ class SensorBase(object):
         Unified sensor action.
         '''
         pass
+
+    def stop(self):
+        '''
+        Stop.
+        '''
+        if self.is_streaming:
+            self.stop_streaming(permanent = True)
+        else:
+            self._close_shm()

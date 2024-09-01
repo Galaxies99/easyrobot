@@ -143,12 +143,6 @@ class RobotBase(object):
         '''
         pass
     
-    def stop(self):
-        '''
-        Stop the robot.
-        '''
-        pass
-    
     def open_gripper(self):
         '''
         Open the gripper.
@@ -178,3 +172,12 @@ class RobotBase(object):
         Unified robot action.
         '''
         pass
+
+    def stop(self):
+        '''
+        Stop.
+        '''
+        if self.is_streaming:
+            self.stop_streaming(permanent = True)
+        else:
+            self._close_shm()
