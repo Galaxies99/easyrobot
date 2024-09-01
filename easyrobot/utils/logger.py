@@ -21,6 +21,7 @@ class ColoredLogger(logging.Logger):
                 "CRITICAL": "red,bg_white",
             },
         )
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(formatter)
-        self.addHandler(console_handler)
+        if not self.handlers:
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(formatter)
+            self.addHandler(console_handler)
