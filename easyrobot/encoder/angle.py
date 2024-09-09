@@ -81,17 +81,103 @@ class AngleEncoder(EncoderBase):
         for i, id in enumerate(ids):
             self.ids_map[id] = i
         self.sleep_gap = sleep_gap
+        self.with_circle = with_circle
         self.ser = serial.Serial(port, baudrate = baudrate, **kwargs)
         if not self.ser.is_open:
             raise RuntimeError('Fail to open the serial port, please check your settings again.')
         self.ser.flushInput()
         self.ser.flushOutput()
-        self.last_info = self.get_info(ignore_error = False)
+        self.last_angle = self.get_angles(ignore_error = False)
         super(AngleEncoder, self).__init__(
             logger_name = logger_name, 
             shm_name = shm_name, 
             streaming_freq = streaming_freq
         )
+
+    def get_angles(self, ignore_error = False, **kwargs):
+        """
+        Get the angles of the encoder.
+
+        Args:
+        - ignore_error: bool, optional, default: False, whether to ignore the incomplete data error (if set True, then the last results will be used.)
+        
+        Returns:
+        - ret: np.array, the encoder angle results corresponding to the ids array.
+        """
+        self.ser.flushInput()
+        ids = copy.deepcopy(self.ids)
+        for i in ids:
+            sendbytes = str(i).zfill(2) + " 03 00 41 00 01"
+            crc, crc_H, crc_L = crc16(sendbytes)
+            sendbytes = sendbytes + ' ' + crc_L + ' ' + crc_H
+            sendbytes = bytes.fromhex(sendbytes)
+            self.ser.write(sendbytes) 
+            time.sleep(self.sleep_gap)
+        
+        re = self.ser.read(len(ids) * 7)
+        if self.ser.inWaiting() > 0:
+            se = self.ser.read_all()
+            re += se
+        
+        count = 0
+        remains = ids.copy()
+        if ignore_error:
+            ret = np.copy(self.last_angle).astype(np.float32)
+        else:
+            ret = np.zeros(self.ids_num).astype(np.float32)
+        b = 0
+        while b <= len(re) - 7:
+            if re[b + 1] == 3 and re[b + 2] == 2 and re[b] in remains:
+                angle = 360 * (re[b + 3] * 256 + re[b + 4]) / 4096
+                ret[self.ids_map[re[b]]] = angle
+                count += 1
+                remains.remove(re[b])
+                b += 7
+            else:
+                b += 1
+        if not ignore_error and count != len(ids):
+            raise RuntimeError('Failure to receive all encoders, errors occurred in ID {}.'.format(remains))
+        self.last_angle = ret
+        return ret
+    
+    def get_circles(self, **kwargs):
+        """
+        Get the circles of the encoder.
+
+        Returns:
+        - ret: np.array, the encoder circle results corresponding to the ids array.
+        """
+        self.ser.flushInput()
+        ids = copy.deepcopy(self.ids)
+        for i in ids:
+            sendbytes = str(i).zfill(2) + " 03 00 44 00 01"
+            crc, crc_H, crc_L = crc16(sendbytes)
+            sendbytes = sendbytes + ' ' + crc_L + ' ' + crc_H
+            sendbytes = bytes.fromhex(sendbytes)
+            self.ser.write(sendbytes) 
+            time.sleep(self.sleep_gap)
+        
+        re = self.ser.read(len(ids) * 7)
+        if self.ser.inWaiting() > 0:
+            se = self.ser.read_all()
+            re += se
+        
+        count = 0
+        remains = ids.copy()
+        ret = np.zeros(self.ids_num).astype(np.float32)
+        b = 0
+        while b <= len(re) - 7:
+            if re[b + 1] == 3 and re[b + 2] == 2 and re[b] in remains:
+                angle = re[b + 3] * 256 + re[b + 4]
+                ret[self.ids_map[re[b]]] = angle
+                count += 1
+                remains.remove(re[b])
+                b += 7
+            else:
+                b += 1
+        if count != len(ids):
+            raise RuntimeError('Failure to receive all encoders, errors occurred in ID {}.'.format(remains))
+        return ret
 
     def get_info(self, ignore_error = False, **kwargs):
         """
@@ -103,37 +189,10 @@ class AngleEncoder(EncoderBase):
         Returns:
         - ret: np.array, the encoder results corresponding to the ids array.
         """
-        self.ser.flushInput()
-        ids = copy.deepcopy(self.ids)
-        for i in ids:
-            sendbytes = str(i).zfill(2) + " 03 00 41 00 03"
-            crc, crc_H, crc_L = crc16(sendbytes)
-            sendbytes = sendbytes + ' ' + crc_L + ' ' + crc_H
-            sendbytes = bytes.fromhex(sendbytes)
-            self.ser.write(sendbytes) 
-            time.sleep(self.sleep_gap)
-        re = self.ser.read(len(ids) * 11)
-        if self.ser.inWaiting() > 0:
-            se = self.ser.read_all()
-            re += se
-        count = 0
-        remains = ids.copy()
-        if ignore_error:
-            ret = np.copy(self.last_info).astype(np.float32)
-        else:
-            ret = np.zeros(self.ids_num).astype(np.float32)
-        for b in range(len(re) - 10):
-            if re[b + 1] == 3 and re[b + 2] == 6 and re[b] in remains:
-                angle = 360 * (re[b + 3] * 256 + re[b + 4]) / 4096
-                ret[self.ids_map[re[b]]] = angle
-                count += 1
-                remains.remove(re[b])
-        if not ignore_error and count != len(ids):
-            raise RuntimeError('Failure to receive all encoders, errors occurred in ID {}.'.format(remains))
-        self.last_info = ret
-        return ret
+        return self.get_angles(ignore_error = ignore_error, **kwargs)
+
 
     def fetch_info(self):
         if not self.is_streaming:
             self.get_info(ignore_error = True)
-        return self.last_info
+        return self.last_angle
