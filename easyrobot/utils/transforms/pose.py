@@ -76,6 +76,29 @@ def mat_to_xyz_rot(mat, rotation_rep, rotation_rep_convention = None):
     )
 
 
+def construct_pose(xyz, rot, from_rep, to_rep, from_convention = None, to_convention = None):
+    """
+    Construct pose from xyz and rotation.
+    """
+    rot = rt.rotation_transform(
+        rot,
+        from_rep = from_rep,
+        to_rep = to_rep,
+        from_convention = from_convention,
+        to_convention = to_convention
+    )
+    if to_rep == "matrix":
+        assert xyz.shape[:-1] == rot.shape[:-2], "Imcompatible shape between xyz and rotation."
+        pose = np.zeros(xyz.shape[:-1] + (4, 4), dtype = np.float32)
+        pose[..., :3, 3] = xyz
+        pose[..., :3, :3] = rot
+        pose[..., 3, 3] = 1.0
+        return pose
+    else:
+        assert xyz.shape[:-1] == rot.shape[:-1], "Imcompatible shape between xyz and rotation."
+        return np.concatenate([xyz, rot], axis = -1)
+
+
 def apply_mat_to_pose(pose, mat, rotation_rep, rotation_rep_convention = None):
     """
     Apply transformation matrix mat to pose under any rotation form.
