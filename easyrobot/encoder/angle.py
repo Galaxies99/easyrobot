@@ -81,7 +81,6 @@ class AngleEncoder(EncoderBase):
         for i, id in enumerate(ids):
             self.ids_map[id] = i
         self.sleep_gap = sleep_gap
-        self.with_circle = with_circle
         self.ser = serial.Serial(port, baudrate = baudrate, **kwargs)
         if not self.ser.is_open:
             raise RuntimeError('Fail to open the serial port, please check your settings again.')
